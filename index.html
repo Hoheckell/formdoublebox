@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>doublebox</title>
+    <style>
+        .selected{
+            color: #FFF;
+            font-weight: bold;
+        }
+        .boxpecas ul li{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row"> 
+            <div class="col-lg-12">
+                <h2>Form DoubleBox</h2>
+                <form action="processa.php" method="POST" id="formpecas">
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" name="nome" id="nome" value="" class="form-control">
+                </div>
+            </div>
+        </div>            
+        <div class="row"> 
+            <div class="col-lg-5 bg-info rounded boxpecas" id="pecas">
+                <ul>
+                        <li class="item" data-item="parafusos">Parafusos</li>
+                        <li class="item" data-item="porcas">Porcas</li>
+                        <li class="item" data-item="buchas">Buchas</li>
+                </ul>
+            </div>
+            <div class="col-lg-2">
+                <button type="button" class="btn btn-sm btn-secondary action" id="add">Adicionar &rightarrow;</button>
+                <button type="button" class="btn btn-sm btn-secondary action" id="addall"> Adicionar Todos</button>
+                <button type="button" class="btn btn-sm btn-secondary action" id="rem">&leftarrow; Remover</button>
+                <button type="button" class="btn btn-sm btn-secondary action" id="remall">Remover todos</button>
+            </div>
+            <div class="col-lg-5 bg-warning rounded boxpecas" id="adicionadas">
+                <ul>
+                </ul>
+            </div>
+        </div>        
+        <div class="row"> 
+                <div class="col-lg-12" ><br>
+                    <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function(){
+            $(".boxpecas ul li").click(function(){
+                $(this).toggleClass('selected');
+            });
+
+            
+            var additens = function(){
+                $("#adicionadas ul li").each(function(){
+                    var item = $(this).attr('data-item');
+                    var html = '<input type="hidden" name="item[]" value="'+item+'">';
+                    if( $('#formpecas input[value="'+item+'"]').length == 0){
+                        $("#formpecas").append(html);
+                    }
+                })
+};
+            var remitens = function(){
+                $("#pecas ul li").each(function(){
+                    var item = $(this).attr('data-item'); 
+                    if( $('#formpecas input[value="'+item+'"]').length > 0){
+                        $('#formpecas input[value="'+item+'"]').remove();
+                    }
+                });
+            };
+
+            $(".action").click(function(){
+                var action = $(this).attr('id');
+                switch(action){
+                    case 'add':
+                        $("#adicionadas ul").append($("#pecas li.selected").toggleClass('selected')); 
+                        additens();
+                    break;
+                    case 'addall':
+                        $("#adicionadas ul").append($("#pecas li"));
+                        additens();
+                    break;
+                    case 'rem':
+                        $("#pecas ul").append($("#adicionadas li.selected").toggleClass('selected'));
+                        remitens();
+                    break;
+                    case 'remall':
+                        $("#pecas ul").append($("#adicionadas li"));
+                        remitens();
+                    break;
+                }
+            });
+
+
+        })
+    </script>
+</body>
+</html>
